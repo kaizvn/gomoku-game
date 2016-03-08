@@ -10,7 +10,7 @@
 
 
 ## How to run
-- Require installing NodeJS, MeteorJS.
+- Require installing NodeJS, MeteorJS, Mongodb.
 - simply run command to test app:
 
     meteor run
