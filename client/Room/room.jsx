@@ -70,9 +70,6 @@ RoomView = React.createClass({
         }
 
     },
-    renderBoard(){
-        return (<Board info={this.data.info} handleClick={this.handleClick}/>);
-    },
 
     invalidHandler(){
         localStorage.clear();
@@ -81,8 +78,9 @@ RoomView = React.createClass({
     },
 
     joinToPlay(){
-        var self = this;
-        var playerId = this.getPlayerId();
+        var self = this
+            , playerId = this.getPlayerId();
+
         if (!this.props.roomId || !playerId) {
             this.invalidHandler();
         }
@@ -118,9 +116,12 @@ RoomView = React.createClass({
                 <span> id: {playerId}</span> <br/>
             </div>
         );
-
-
     },
+
+    renderBoard(){
+        return (<Board info={this.data.info} handleClick={this.handleClick}/>);
+    },
+
     renderRoomInfo(){
         var info = this.data.info;
         return (

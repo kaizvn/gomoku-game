@@ -4,7 +4,9 @@ HomeView = React.createClass({
         var redirect = Session.get('redirect_url');
         return {
             playerId: 'anonymous' + Date.now() % 1000000,
-            redirect: redirect
+            redirect: redirect,
+            error: false,
+            errorMsg: ''
         }
     },
 
@@ -25,24 +27,35 @@ HomeView = React.createClass({
 
     handleSubmit(e){
         e.preventDefault();
-        var self = this;
-        var playerId = this.state.playerId;
+        var self = this
+            , playerId = this.state.playerId;
 
         if (!this.state.playerId)
             return false;
 
-        Meteor.call('getPlayer', playerId, function (err, player) {
-            localStorage.setItem('playerId', player.playerId);
+        Meteor.call('getPlayer', playerId, function (err, res) {
+            if (res.errorMsg) {
+                self.setState({error: true});
+                self.setState({errorMsg: res.errorMsg});
+            } else {
+                localStorage.setItem('playerId', res.playerId);
+                self.redirectSubmit();
+            }
 
-            self.redirectSubmit();
         });
     },
 
     handleChangeId(e){
         this.setState({playerId: e.target.value.substr(0, 15)});
     },
+
     cleanUp(e){
         return e.target.select();
+    },
+
+    renderError(){
+        return (<div className="help-block text-danger">{this.state.errorMsg}</div> );
+
     },
 
     render(){
@@ -55,6 +68,7 @@ HomeView = React.createClass({
                     <input type="text" onFocus={this.cleanUp} onChange={this.handleChangeId} value={this.state.playerId}
                            className="form-control col-md-3 text-center"
                            aria-describedby="helpBlock"/>
+                    {this.state.error && this.renderError()}
                     <span className="help-block">choose a name to play.</span>
                 </div>
             </form>)

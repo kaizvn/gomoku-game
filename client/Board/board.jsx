@@ -1,9 +1,5 @@
 Board = React.createClass({
-    //mixins: [ReactMeteorData],
-
     propTypes: {
-        // This component gets the task to display through a React prop.
-        // We can use propTypes to indicate it is required
         info: React.PropTypes.object,
         test: React.PropTypes.string
     },
@@ -50,21 +46,9 @@ Board = React.createClass({
             squareEnd: squareEnd
         }
     },
+
     componentWillMount(){
-        //this.createBoardMap();
-        if (this.state.user === null)
-            this.setState({user: {type: 'player01'}});
     },
-    /*
-     componentDidMount() {
-
-     },
-     componentWillUnmount(){
-
-     },
-     componentDidUnmount(){
-
-     },*/
 
     renderUrl(val){
         val = val || 0;
@@ -115,6 +99,7 @@ Board = React.createClass({
 
         return squares;
     },
+
     render(){
         return (<div className="">
             <div className="render-board" style={this.BoardStyle().boards}>

@@ -3,7 +3,7 @@
  */
 
 var HEIGHT = 15,
-    WIDTH = 15;
+    WIDTH = 15; // default size map
 
 var TYPE_MAP = {
     'player01': '1',
@@ -14,8 +14,8 @@ var TYPE_MAP = {
 
 function detectWin(x, y, boardMap, type) {
     var hasWinner = false
-        , done = false;
-    var valTable = [1, 1, 1, 1];
+        , done = false
+        , valTable = [1, 1, 1, 1];
 
     var mapTable = [
         [-1, 0], //up
@@ -30,10 +30,12 @@ function detectWin(x, y, boardMap, type) {
 
     while (!hasWinner && !done) {
         mapTable.forEach(function (val, index) {
-            var [a,b] = val;
-            var pos = index % 4;
+            var [a,b] = val
+                , pos = index % 4; // position
 
-            while (boardMap[x + a] && boardMap[x + a][y + b] && +boardMap[x + a][y + b] == +type) {
+            while (boardMap[x + a]
+            && boardMap[x + a][y + b]
+            && +boardMap[x + a][y + b] == +type) {
                 valTable[pos]++;
                 a += val[0];
                 b += val[1];
@@ -58,8 +60,9 @@ var methods = {
         //TODO : resetGame with update Scoreboard
     },
     createNewRoom: function (playerId) {
-        var room = new Room();
-        var defaultBoard = new Array(HEIGHT);
+        var room = new Room()
+            , defaultBoard = new Array(HEIGHT);
+
         for (let i = 0; i < HEIGHT; i++) {
             defaultBoard[i] = [];
             for (let j = 0; j < WIDTH; j++)
@@ -75,10 +78,9 @@ var methods = {
         return room._id;
     },
     joinRoom: function (roomId, playerId) {
-        var position = null;
-
-        var room = Meteor.room.findOne({_id: roomId});
-        var player = Meteor.player.findOne({playerId: playerId});
+        var position = null
+            , room = Meteor.room.findOne({_id: roomId})
+            , player = Meteor.player.findOne({playerId: playerId});
 
         if (!room || !player)
             return false;
@@ -118,12 +120,11 @@ var methods = {
         x = +x;
         y = +y;
 
-        var type = null;
+        var type = null
+            , room = Meteor.room.findOne({_id: roomId})
+            , currentPlayer = Meteor.player.findOne({playerId: playerId});
 
-        var room = Meteor.room.findOne({_id: roomId});
-        var currentPlayer = Meteor.player.findOne({playerId: playerId});
-
-        if (!currentPlayer.info[roomId] || !room || room.gameStatus == 'Finished' || !room.player02 ) return false;
+        if (!currentPlayer.info[roomId] || !room || room.gameStatus == 'Finished' || !room.player02) return false;
 
         var currentInfo = currentPlayer.info[room._id];
 

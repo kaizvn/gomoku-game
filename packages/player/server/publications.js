@@ -15,7 +15,6 @@ var publications = {
             return [];
 
         var roomInfo = Meteor.room.findOne({_id: roomId});
-
         return roomInfo ? Collection.find({playerId: {$in: [roomInfo.player01, roomInfo.player02]}}) : [];
     },
 
