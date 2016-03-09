@@ -28,20 +28,25 @@ HomeView = React.createClass({
     handleSubmit(e){
         e.preventDefault();
         var self = this
-            , playerId = this.state.playerId;
+            , playerId = this.state.playerId.trim();
 
-        if (!this.state.playerId)
+        if (this.state.playerId == void 0 || this.state.playerId === '')
             return false;
 
         Meteor.call('getPlayer', playerId, function (err, res) {
-            if (res.errorMsg) {
+            if (err) {
+                console.error(err);
                 self.setState({error: true});
-                self.setState({errorMsg: res.errorMsg});
-            } else {
-                localStorage.setItem('playerId', res.playerId);
-                self.redirectSubmit();
+                self.setState({errorMsg: err.message});
+            } else if (res) {
+                if (res.errorMsg) {
+                    self.setState({error: true});
+                    self.setState({errorMsg: res.errorMsg});
+                } else if (res.playerId) {
+                    localStorage.setItem('playerId', res.playerId);
+                    self.redirectSubmit();
+                }
             }
-
         });
     },
 
@@ -54,7 +59,7 @@ HomeView = React.createClass({
     },
 
     renderError(){
-        return (<div className="help-block text-danger">{this.state.errorMsg}</div> );
+        return (<div className="text-danger">{this.state.errorMsg}</div> );
 
     },
 
